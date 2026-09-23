@@ -1,5 +1,6 @@
 package com.college.grievance.util;
 
+import java.net.URI;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -20,11 +21,38 @@ public class DBConnection {
 
         if (databaseUrl != null && !databaseUrl.isBlank()) {
 
-            if (databaseUrl.startsWith("postgresql://")) {
-                databaseUrl = "jdbc:" + databaseUrl;
-            }
+            try {
+                URI uri = new URI(databaseUrl);
 
-            return DriverManager.getConnection(databaseUrl);
+                String host = uri.getHost();
+                int port = uri.getPort();
+
+                if (port == -1) {
+                    port = 5432;
+                }
+
+                String database = uri.getPath();
+
+                String userInfo = uri.getUserInfo();
+                String username = userInfo.substring(0, userInfo.indexOf(':'));
+                String password = userInfo.substring(userInfo.indexOf(':') + 1);
+
+                String jdbcUrl =
+                        "jdbc:postgresql://" +
+                        host + ":" + port + database;
+
+                return DriverManager.getConnection(
+                        jdbcUrl,
+                        username,
+                        password
+                );
+
+            } catch (Exception e) {
+                throw new SQLException(
+                        "Unable to connect to PostgreSQL database",
+                        e
+                );
+            }
         }
 
         // Local MySQL connection
