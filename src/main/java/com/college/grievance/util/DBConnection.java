@@ -6,13 +6,20 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
+    static {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("PostgreSQL JDBC Driver not found", e);
+        }
+    }
+
     public static Connection getConnection() throws SQLException {
 
         String databaseUrl = System.getenv("DATABASE_URL");
 
         if (databaseUrl != null && !databaseUrl.isBlank()) {
 
-            // Render PostgreSQL URL
             if (databaseUrl.startsWith("postgresql://")) {
                 databaseUrl = "jdbc:" + databaseUrl;
             }
