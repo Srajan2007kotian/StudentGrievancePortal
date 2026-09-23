@@ -1,0 +1,4 @@
+package com.college.grievance.controller;
+import jakarta.servlet.*;import jakarta.servlet.http.*;import jakarta.servlet.annotation.*;import com.college.grievance.dao.ComplaintDAO;import com.college.grievance.model.User;import java.io.*;
+@WebServlet("/status")
+public class StatusServlet extends HttpServlet{protected void doPost(HttpServletRequest q,HttpServletResponse r)throws ServletException,IOException{try{User u=(User)q.getSession().getAttribute("user");if(u==null||!"ADMIN".equals(u.role)){r.sendError(403);return;}new ComplaintDAO().updateStatus(Integer.parseInt(q.getParameter("id")),q.getParameter("status"),q.getParameter("remark"));r.sendRedirect("admin");}catch(Exception e){throw new ServletException(e);}}}

@@ -1,0 +1,4 @@
+package com.college.grievance.controller;
+import jakarta.servlet.*;import jakarta.servlet.http.*;import jakarta.servlet.annotation.*;import com.college.grievance.dao.UserDAO;import java.io.*;
+@WebServlet("/register")
+public class RegisterServlet extends HttpServlet{protected void doPost(HttpServletRequest q,HttpServletResponse r)throws ServletException,IOException{try{boolean ok=new UserDAO().register(q.getParameter("name"),q.getParameter("email"),q.getParameter("password"));if(ok)r.sendRedirect("login.jsp?registered=1");else{q.setAttribute("error","Registration failed. Email may already exist.");q.getRequestDispatcher("register.jsp").forward(q,r);}}catch(Exception e){q.setAttribute("error","Email may already be registered.");q.getRequestDispatcher("register.jsp").forward(q,r);}}}

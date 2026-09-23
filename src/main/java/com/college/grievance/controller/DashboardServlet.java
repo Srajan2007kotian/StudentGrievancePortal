@@ -1,0 +1,3 @@
+package com.college.grievance.controller;
+import jakarta.servlet.*;import jakarta.servlet.http.*;import jakarta.servlet.annotation.*;import com.college.grievance.dao.ComplaintDAO;import com.college.grievance.model.User;import java.io.*;
+@WebServlet("/dashboard") public class DashboardServlet extends HttpServlet{protected void doGet(HttpServletRequest q,HttpServletResponse r)throws ServletException,IOException{try{User u=(User)q.getSession().getAttribute("user");if(u==null){r.sendRedirect("login.jsp");return;}q.setAttribute("complaints",new ComplaintDAO().byEmail(u.email));q.getRequestDispatcher("dashboard.jsp").forward(q,r);}catch(Exception e){throw new ServletException(e);}}}

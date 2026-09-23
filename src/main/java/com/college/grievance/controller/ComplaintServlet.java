@@ -1,0 +1,4 @@
+package com.college.grievance.controller;
+import jakarta.servlet.*;import jakarta.servlet.http.*;import jakarta.servlet.annotation.*;import com.college.grievance.dao.ComplaintDAO;import com.college.grievance.model.*;import java.io.*;
+@WebServlet("/complaint")
+public class ComplaintServlet extends HttpServlet{protected void doPost(HttpServletRequest q,HttpServletResponse r)throws ServletException,IOException{try{User u=(User)q.getSession().getAttribute("user");if(u==null){r.sendRedirect("login.jsp");return;}Complaint c=new Complaint();c.studentName=u.name;c.studentEmail=u.email;c.category=q.getParameter("category");c.location=q.getParameter("location");c.description=q.getParameter("description");String code=new ComplaintDAO().add(c);q.setAttribute("code",code);q.getRequestDispatcher("complaint-success.jsp").forward(q,r);}catch(Exception e){throw new ServletException(e);}}}

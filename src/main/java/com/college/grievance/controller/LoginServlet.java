@@ -1,0 +1,4 @@
+package com.college.grievance.controller;
+import jakarta.servlet.*;import jakarta.servlet.http.*;import jakarta.servlet.annotation.*;import com.college.grievance.dao.UserDAO;import com.college.grievance.model.User;import java.io.*;
+@WebServlet("/login")
+public class LoginServlet extends HttpServlet{protected void doPost(HttpServletRequest req,HttpServletResponse resp)throws ServletException,IOException{try{User u=new UserDAO().login(req.getParameter("email"),req.getParameter("password"));if(u==null){req.setAttribute("error","Invalid email or password.");req.getRequestDispatcher("login.jsp").forward(req,resp);return;}req.getSession().setAttribute("user",u);resp.sendRedirect(u.role.equals("ADMIN")?"admin":"dashboard");}catch(Exception e){throw new ServletException(e);}}}
